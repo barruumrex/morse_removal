@@ -1,13 +1,20 @@
 defmodule MorseRemoval do
   @moduledoc
-  def find_matches( string, matcher ), do: do_find_matches( string, matcher, 0, [])
+  def find_matches( string, matcher ), do: do_find_matches( [], string, matcher )
 
-  defp do_find_matches( <<>>, _matcher, _depth, results ), do: Enum.reverse(results)
-  defp do_find_matches( << head::binary-size(1), tail::binary >>, matcher, depth, results ) when head == matcher do
-    do_find_matches( tail, matcher, depth + 1, [ depth | results ] )
+  defp do_find_matches( results, _string, <<>> ), do: results
+  defp do_find_matches( results, string, << remove_char::binary-size(1), tail::binary >> ) do
+    string |> get_indices( remove_char ) |> add_indices( results ) |> do_find_matches(string, tail)
   end
-  defp do_find_matches( << head::binary-size(1), tail::binary >>, matcher, depth, results ) when head != matcher do
-    do_find_matches( tail, matcher, depth + 1, results )
+
+  defp get_indices(string, remove_char), do: do_get_indices( string, remove_char, 0, [] )
+
+  defp do_get_indices( <<>>, _matcher, _depth, results ), do: Enum.reverse(results)
+  defp do_get_indices( << head::binary-size(1), tail::binary >>, matcher, depth, results ) when head == matcher do
+    do_get_indices( tail, matcher, depth + 1, [ depth | results ] )
+  end
+  defp do_get_indices( << head::binary-size(1), tail::binary >>, matcher, depth, results ) when head != matcher do
+    do_get_indices( tail, matcher, depth + 1, results )
   end
 
   def add_indices( new_list, [] ), do: Enum.map( new_list, fn(n) -> [n] end )
@@ -29,5 +36,9 @@ defmodule MorseRemoval do
     else
       do_add_index( element, tail, results )
     end
+  end
+
+  def remove( string, removal ) do
+    find_matches(Morse.encode(string), Morse.encode(removal))
   end
 end
