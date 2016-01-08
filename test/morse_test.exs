@@ -5,7 +5,17 @@ defmodule MorseTest do
   test "encode" do
     assert Morse.encode("a") == "*-"
     assert Morse.encode("A") == "*-"
-    assert Morse.encode("ab") == "*-_-***"
+    assert Morse.encode("AB") == "*-_-***"
+    assert Morse.encode("R") == "*-*"
+    assert Morse.encode("Hello World") == "****_*_*-**_*-**_---___*--_---_*-*_*-**_-**"
+    assert Morse.encode("Help") == "****_*_*-**_*--*"
+    assert Morse.encode("ABCD") == "*-_-***_-*-*_-**"
+    assert Morse.encode("ST") == "***_-"
+    assert Morse.encode("ZN") == "--**_-*"
+    assert Morse.encode("The Star Wars Saga") == "-_****_*___***_-_*-_*-*___*--_*-_*-*_***___***_*-_--*_*-"
+    assert Morse.encode("Yoda") == "-*--_---_-**_*-"
+    assert Morse.encode("Leia") == "*-**_*_**_*-"
     assert Morse.encode("Sphinx of black quartz, judge my vow") == "***_*--*_****_**_-*_-**-___---_**-*___-***_*-**_*-_-*-*_-*-___--*-_**-_*-_*-*_-_--**_--**--___*---_**-_-**_--*_*___--_-*--___***-_---_*--"
+
   end
 end
