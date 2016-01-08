@@ -1,0 +1,2 @@
+defmodule MorseRemoval do
+end
