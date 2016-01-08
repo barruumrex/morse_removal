@@ -27,6 +27,9 @@ defmodule MorseRemoval.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:benchfella, "~> 0.3.0"}]
+    [
+      {:benchfella, "~> 0.3.0"},
+      {:dogma, "~> 0.0", only: :dev},
+    ]
   end
 end
