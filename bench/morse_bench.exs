@@ -4,8 +4,8 @@ defmodule MorseBench do
   bench "hello world encode" do
     Morse.encode("Hello World")
   end
-  
-  bench "pangram encode" do 
+
+  bench "pangram encode" do
     Morse.encode("Sphinx of black quartz, judge my vow")
   end
 end

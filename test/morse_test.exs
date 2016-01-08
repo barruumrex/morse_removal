@@ -7,7 +7,7 @@ defmodule MorseTest do
     assert Morse.encode("A") == "*-"
   end
 
-  test "encode examples" do 
+  test "encode examples" do
     assert Morse.encode("AB") == "*-_-***"
     assert Morse.encode("R") == "*-*"
     assert Morse.encode("Hello World") == "****_*_*-**_*-**_---___*--_---_*-*_*-**_-**"
@@ -21,6 +21,13 @@ defmodule MorseTest do
   end
 
   test "encode pangram" do
-    assert Morse.encode("Sphinx of black quartz, judge my vow") == "***_*--*_****_**_-*_-**-___---_**-*___-***_*-**_*-_-*-*_-*-___--*-_**-_*-_*-*_-_--**_--**--___*---_**-_-**_--*_*___--_-*--___***-_---_*--"
+    morse_sentence = [ "***_*--*_****_**_-*_-**-",
+                     "---_**-*",
+                     "-***_*-**_*-_-*-*_-*-",
+                     "--*-_**-_*-_*-*_-_--**_--**--",
+                     "*---_**-_-**_--*_*",
+                     "--_-*--",
+                     "***-_---_*--" ] |> Enum.join("___")
+    assert Morse.encode("Sphinx of black quartz, judge my vow") == morse_sentence
   end
 end
