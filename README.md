@@ -1,6 +1,8 @@
 # MorseRemoval
 
-Solution a problem set
+Module contains a solution for the following problem set. Using the coding experiment as a way of teaching myself elixir.
+
+The morse code spec used is the [ITU Spec](http://www.itu.int/dms_pubrec/itu-r/rec/m/R-REC-M.1677-1-200910-I!!PDF-E.pdf)
 
 ## Problem Set
 
@@ -85,6 +87,4 @@ Expand your program to find all of the possible sequences of remaining character
 * Expected Output: Total number of distinct and valid remaining token sequences in the original message.
 * Bounds: Original Message less than 100 Morse code characters.
 
-## Extra Details
 
-* This solution implementation includes an implementation of a morse code generator that uses the characters in the problem spec. The morse code spec used is the [ITU Spec](http://www.itu.int/dms_pubrec/itu-r/rec/m/R-REC-M.1677-1-200910-I!!PDF-E.pdf)
