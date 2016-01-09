@@ -38,6 +38,20 @@ defmodule MorseRemoval do
   end
 
   def remove(string, removal) do
-    find_matches(Morse.encode(string), Morse.encode(removal))
+    find_matches(Morse.encode(string), Morse.encode(removal)) |> remove_matches(Morse.encode(string)) |> Enum.uniq
   end
+
+  defp remove_matches(matches, string), do: do_remove_matches([], matches, string)
+
+  defp do_remove_matches(results, [], string), do: results
+  defp do_remove_matches(results, [indices | tail], string) do
+    string |> to_char_list |> remove_indices(indices) |> to_string |> add_to(results) |> do_remove_matches(tail, string)
+  end
+
+  defp remove_indices(string, indices) do
+    Enum.reduce(indices,string, fn(index,string) -> List.delete_at(string,index) end)
+  end
+
+
+  defp add_to(element, collection) when is_list(collection), do: [element | collection]
 end

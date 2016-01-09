@@ -39,7 +39,7 @@ defmodule MorseRemovalTest do
   end
 
   test "create morse and output removal combinations" do
-    assert MorseRemoval.remove("AB","R") == [[4, 3, 0], [4, 1, 0], [5, 3, 0], [5, 1, 0], [6, 3, 0], [6, 1, 0]]
+    assert MorseRemoval.remove("AB","R") == [ "_-**", "-_**" ]
   end
 
 end
