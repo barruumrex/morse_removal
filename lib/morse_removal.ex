@@ -1,5 +1,17 @@
 defmodule MorseRemoval do
   @moduledoc
+  def unique_count(string, removal), do: string |> remove(removal) |> Enum.count
+
+  def remove(string, removal) when is_binary(removal), do: remove(string, [removal])
+  def remove(string, removal) when is_list(removal) do
+    do_remove([], Morse.encode(string), Enum.map(removal, &Morse.encode/1))
+  end
+
+  defp do_remove(results, string, []), do: results |> remove_matches(string) |> Enum.uniq
+  defp do_remove(results, string, [removal | tail]) do
+    string |> find_matches(removal) |> combine_matches(results) |> do_remove(string, tail)
+  end
+
   def find_matches(string, matcher), do: do_find_matches([], string, matcher)
 
   defp do_find_matches(results, _string, <<>>), do: results
@@ -37,15 +49,37 @@ defmodule MorseRemoval do
     do_add_index(element, tail, results)
   end
 
-  def remove(string, removal) when is_binary(removal), do: do_remove(Morse.encode(string),Morse.encode(removal))
+  defp combine_matches(new_matches, []), do: new_matches
+  defp combine_matches(new_matches, old_matches), do: do_combine_matches([], new_matches, old_matches)
 
-  defp do_remove(string, removal) when is_binary(removal) do
-    string |> find_matches(removal) |> remove_matches(string) |> Enum.uniq
+  defp do_combine_matches(results, [], _old_matches), do: results
+  defp do_combine_matches(results, [ indices | tail ], old_matches) do
+    old_matches |> insert_indices(indices) |> Enum.concat(results) |> do_combine_matches(tail, old_matches)
+  end
+
+  defp insert_indices(matches, indices), do: do_insert_indices([], matches, indices)
+
+  defp do_insert_indices(results, [], _new_indices), do: results
+  defp do_insert_indices(results, [ start_indices | tail ], new_indices) do
+    start_indices |> combine_indices(new_indices) |> add_if_not_empty(results) |> do_insert_indices(tail, new_indices)
+  end
+
+  defp combine_indices(start_indices, new_indices), do: do_combine_indices([], start_indices, new_indices)
+
+  defp do_combine_indices(results, [], []), do: results |> Enum.reverse
+  defp do_combine_indices(results, [head | tail], []), do: head |> add_to(results) |> do_combine_indices(tail,[])
+  defp do_combine_indices(results, [], [head | tail]), do: head |> add_to(results) |> do_combine_indices([], tail)
+  defp do_combine_indices(_results, left, right) when hd(left) == hd(right), do: []
+  defp do_combine_indices(results, [left_head | tail], right) when left_head > hd(right) do
+    left_head |> add_to(results) |> do_combine_indices(tail, right)
+  end
+  defp do_combine_indices(results, left, [right_head | tail]) when right_head > hd(left) do
+    right_head |> add_to(results) |> do_combine_indices(left, tail)
   end
 
   defp remove_matches(matches, string), do: do_remove_matches([], matches, string)
 
-  defp do_remove_matches(results, [], string), do: results
+  defp do_remove_matches(results, [], _string), do: results
   defp do_remove_matches(results, [indices | tail], string) do
     string |> to_char_list |> remove_indices(indices) |> to_string |> add_to(results) |> do_remove_matches(tail, string)
   end
@@ -55,6 +89,8 @@ defmodule MorseRemoval do
   end
 
   defp add_to(element, collection) when is_list(collection), do: [element | collection]
+  defp add_if_not_empty(element, collection) when length(element) == 0, do: collection
+  defp add_if_not_empty(element, collection), do: add_to(element, collection)
 
-  def unique_count(string, removal), do: string |> remove(removal) |> Enum.count
+
 end
