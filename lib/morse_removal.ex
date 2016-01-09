@@ -52,6 +52,7 @@ defmodule MorseRemoval do
     Enum.reduce(indices,string, fn(index,string) -> List.delete_at(string,index) end)
   end
 
-
   defp add_to(element, collection) when is_list(collection), do: [element | collection]
+
+  def unique_count(string, removal), do: string |> remove(removal) |> Enum.count
 end

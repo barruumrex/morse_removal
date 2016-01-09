@@ -10,10 +10,10 @@ defmodule MorseBench do
   end
 
   bench "remove 'Help' from 'Hello World'" do
-    MorseRemoval.remove("Hello World","Help")
+    MorseRemoval.unique_count("Hello World","Help")
   end
 
   bench "remove 'Yoda' from 'The Star Wars Saga'" do
-    MorseRemoval.remove("The Star Wars Saga","Yoda")
+    MorseRemoval.unique_count("The Star Wars Saga","Yoda")
   end
 end

@@ -42,4 +42,12 @@ defmodule MorseRemovalTest do
     assert MorseRemoval.remove("AB","R") == [ "_-**", "-_**" ]
   end
 
+  test "output number of unique combinations after removal" do
+    assert MorseRemoval.unique_count("AB","R") == 2
+  end
+
+  test "output count when removing 'Help' from 'Hello World'" do
+    assert MorseRemoval.unique_count("Hello World","Help") == 1311
+  end
+
 end
