@@ -37,8 +37,10 @@ defmodule MorseRemoval do
     do_add_index(element, tail, results)
   end
 
-  def remove(string, removal) do
-    find_matches(Morse.encode(string), Morse.encode(removal)) |> remove_matches(Morse.encode(string)) |> Enum.uniq
+  def remove(string, removal) when is_binary(removal), do: do_remove(Morse.encode(string),Morse.encode(removal))
+
+  defp do_remove(string, removal) when is_binary(removal) do
+    string |> find_matches(removal) |> remove_matches(string) |> Enum.uniq
   end
 
   defp remove_matches(matches, string), do: do_remove_matches([], matches, string)
