@@ -17,7 +17,7 @@ defmodule MorseRemoval do
     do_get_indices( tail, matcher, depth + 1, results )
   end
 
-  def add_indices( new_list, [] ), do: Enum.map( new_list, fn(n) -> [n] end )
+  def add_indices( new_list, [] ), do: Enum.reduce( new_list, [], fn(n,acc) -> [[n] | acc] end )
   def add_indices( new_list, combined_list ), do: do_add_indices( new_list, combined_list, [] )
 
   defp do_add_indices( [], _combined_list, acc), do: acc
@@ -30,12 +30,11 @@ defmodule MorseRemoval do
   end
 
   defp do_add_index( _element, [], results ), do: results
-  defp do_add_index( element, [head | tail], results ) do
-    if element > List.last(head) do
-      do_add_index( element, tail, results ++ [ head ++ [ element ] ] )
-    else
-      do_add_index( element, tail, results )
-    end
+  defp do_add_index( element, [head | tail], results) when element > hd(head) do
+    do_add_index( element, tail, [ [ element | head ] | results ] )
+  end
+  defp do_add_index( element, [_head | tail], results) do
+    do_add_index( element, tail, results )
   end
 
   def remove( string, removal ) do

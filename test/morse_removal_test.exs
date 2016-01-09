@@ -2,26 +2,44 @@ defmodule MorseRemovalTest do
   use ExUnit.Case
   doctest MorseRemoval
 
-  test "get indices of occurences" do
-    assert MorseRemoval.find_matches( "*.*.*.", "_") == []
-    assert MorseRemoval.find_matches( "", "_") == []
-    assert MorseRemoval.find_matches( "*.*.*.", "*") == [ [0],[2],[4] ]
+  test "get indices against empty string" do
+    assert MorseRemoval.find_matches("", "_") == []
   end
 
-  test "combine indices lists" do
-    assert MorseRemoval.add_indices( [], [] ) == []
-    assert MorseRemoval.add_indices( [0,2,4], [] ) == [ [0], [2], [4] ]
-    assert MorseRemoval.add_indices( [1,2,3], [ [0] ] ) == [ [0,1], [0,2], [0,3] ]
-    assert MorseRemoval.add_indices( [5], [ [0], [2], [4] ] ) == [ [0,5], [2,5], [4,5] ]
-    assert MorseRemoval.add_indices( [1,4], [ [0], [2], [4] ] ) == [ [0,1], [0,4], [2,4] ]
+  test "get indices where there are no matches" do
+    assert MorseRemoval.find_matches("*.*.*.", "_") == []
+  end
+
+  test "get indices of all matches" do
+    assert MorseRemoval.find_matches("*.*.*.", "*") == [[4], [2], [0]]
+  end
+
+  test "add empty lists" do
+    assert MorseRemoval.add_indices([], []) == []
+  end
+
+  test "add list to an empty list" do
+    assert MorseRemoval.add_indices([0, 2, 4], []) == [[4], [2], [0]]
+  end
+
+  test "add list to a single result" do
+    assert MorseRemoval.add_indices([1 ,2 ,3], [[0]]) == [[1, 0], [2, 0], [3, 0]]
+  end
+
+  test "add a single element list where every addition is succesful" do
+    assert MorseRemoval.add_indices([5], [[0], [2], [4]]) == [[5, 4], [5, 2], [5, 0]]
+  end
+
+  test "combine multi element list to multi element result set" do
+    assert MorseRemoval.add_indices([1, 4], [[0], [2], [4]]) == [[1, 0], [4, 2], [4, 0]]
   end
 
   test "get indices for multi character match" do
-    assert MorseRemoval.find_matches( "*.*.", "*." ) == [ [0,1], [0,3], [2,3] ]
+    assert MorseRemoval.find_matches("*.*.", "*.") == [[1, 0], [3, 0], [3, 2]]
   end
 
-  test "create morse and output removal combincations" do
-    assert MorseRemoval.remove("AB","R") == [[0, 1, 4], [0, 3, 4], [0, 1, 5], [0, 3, 5], [0, 1, 6], [0, 3, 6]]
+  test "create morse and output removal combinations" do
+    assert MorseRemoval.remove("AB","R") == [[4, 3, 0], [4, 1, 0], [5, 3, 0], [5, 1, 0], [6, 3, 0], [6, 1, 0]]
   end
 
 end
