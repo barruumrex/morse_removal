@@ -6,13 +6,17 @@ defmodule MorseRemoval do
   end
 
   defp do_unique_count(strings, []), do: strings |> Enum.count
-  defp do_unique_count(strings, [removal|tail]), do: multi_string_remove(strings, removal) |> do_unique_count(tail)
+  defp do_unique_count(strings, [removal|tail]), do: strings |> multi_string_remove(removal) |> do_unique_count(tail)
 
   defp multi_string_remove(strings, removal), do: do_multi_string_remove([], strings, removal)
 
   defp do_multi_string_remove(results, [], _removal), do: results |> Enum.uniq
   defp do_multi_string_remove(results, [string | tail], removal) do
-    string |> find_matches(removal) |> remove_matches(string) |> Enum.concat(results) |> do_multi_string_remove(tail,removal)
+    string
+    |> find_matches(removal)
+    |> remove_matches(string)
+    |> Enum.concat(results)
+    |> do_multi_string_remove(tail,removal)
   end
 
   def remove(string, removal) when is_binary(removal), do: remove(string, [removal])

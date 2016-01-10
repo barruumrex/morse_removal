@@ -14,14 +14,21 @@ defmodule MorseBench do
   end
 
   bench "remove 'Yoda' from 'The Star Wars Saga'" do
-    MorseRemoval.unique_count("The Star Wars Saga", "Yoda") |> IO.puts
+    MorseRemoval.unique_count("The Star Wars Saga", "Yoda")
   end
 
   bench "remove 'Leia' from 'The Star Wars Saga'" do
-    MorseRemoval.unique_count("The Star Wars Saga", "Leia") |> IO.puts
+    MorseRemoval.unique_count("The Star Wars Saga", "Leia")
   end
 
-  bench "remove 'Yoda' then 'Leia' from 'The Star Wars Sage'" do
-    MorseRemoval.unique_count("The Star Wars Saga", ["Yoda","Leia"]) |> IO.puts
+  bench "bytecode benchmarck remove 'Leia' from 'The Star Wars'" do
+    star_wars = Morse.encode("The Star Wars Saga")
+    leia = Morse.encode("Leia")
+    removals = Removal.find_removal_combinations(star_wars,leia)
+    removals |> Removal.remove_from(star_wars) |> Enum.uniq |> Enum.count
   end
+
+  #bench "remove 'Yoda' then 'Leia' from 'The Star Wars Sage'" do
+  #  MorseRemoval.unique_count("The Star Wars Saga", ["Yoda","Leia"]) |> IO.puts
+  #end
 end
