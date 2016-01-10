@@ -21,7 +21,7 @@ defmodule MorseBench do
     MorseRemoval.unique_count("The Star Wars Saga", "Leia") |> IO.puts
   end
 
-  #bench "remove 'Yoda' then 'Leia' from 'The Star Wars Sage'" do
-  #  MorseRemoval.unique_count("The Star Wars Saga", ["Yoda","Leia"])
-  #end
+  bench "remove 'Yoda' then 'Leia' from 'The Star Wars Sage'" do
+    MorseRemoval.unique_count("The Star Wars Saga", ["Yoda","Leia"]) |> IO.puts
+  end
 end

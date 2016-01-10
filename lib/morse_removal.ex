@@ -1,6 +1,19 @@
 defmodule MorseRemoval do
   @moduledoc
-  def unique_count(string, removal), do: string |> remove(removal) |> Enum.count
+  def unique_count(string, removal) when is_binary(removal), do: string |> remove(removal) |> Enum.count
+  def unique_count(string, removal) when is_list(removal) do
+    do_unique_count([Morse.encode(string)],Enum.map(removal, &Morse.encode/1))
+  end
+
+  defp do_unique_count(strings, []), do: strings |> Enum.count
+  defp do_unique_count(strings, [removal|tail]), do: multi_string_remove(strings, removal) |> do_unique_count(tail)
+
+  defp multi_string_remove(strings, removal), do: do_multi_string_remove([], strings, removal)
+
+  defp do_multi_string_remove(results, [], _removal), do: results |> Enum.uniq
+  defp do_multi_string_remove(results, [string | tail], removal) do
+    string |> find_matches(removal) |> remove_matches(string) |> Enum.concat(results) |> do_multi_string_remove(tail,removal)
+  end
 
   def remove(string, removal) when is_binary(removal), do: remove(string, [removal])
   def remove(string, removal) when is_list(removal) do
@@ -14,6 +27,7 @@ defmodule MorseRemoval do
 
   def find_matches(string, matcher), do: do_find_matches([], string, matcher)
 
+  defp do_find_matches(nil, _string, _matcher), do: []
   defp do_find_matches(results, _string, <<>>), do: results
   defp do_find_matches(results, string, <<remove_char::binary-size(1), tail::binary>>) do
     string |> get_indices(remove_char ) |> add_indices(results) |> do_find_matches(string, tail)
@@ -32,6 +46,7 @@ defmodule MorseRemoval do
   def add_indices(new_list, []), do: Enum.reduce(new_list, [], fn(n,acc) -> [[n] | acc] end)
   def add_indices(new_list, combined_list), do: do_add_indices(new_list, combined_list, [])
 
+  defp do_add_indices([], _combined_list, []), do: nil
   defp do_add_indices([], _combined_list, acc), do: acc
   defp do_add_indices([head | tail], combined_list, acc) do
     do_add_indices(tail, combined_list, acc ++ add_index(head, combined_list))
