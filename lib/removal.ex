@@ -4,6 +4,7 @@ defmodule Removal do
 
   def find_removal_combinations(base, removals), do: do_find_removal_combinations([], base, removals)
 
+  defp do_find_removal_combinations(:no_match, _base, _removal), do: []
   defp do_find_removal_combinations(acc, _base, <<>>), do: acc
   defp do_find_removal_combinations(acc, base, <<removal::binary-size(1), tail::binary>>) do
     base |> find_indices(removal) |> insert_indices(acc) |> do_find_removal_combinations(base, tail)
@@ -22,6 +23,7 @@ defmodule Removal do
   defp insert_indices(candidates, indices), do: do_insert_indices([], indices, candidates)
 
   defp do_insert_indices(_acc, [], candidates), do: candidates
+  defp do_insert_indices([], _indices, []), do: :no_match
   defp do_insert_indices(acc, _indices, []), do: acc
   defp do_insert_indices(acc, indices, [candidate | tail]) do
     indices |> insert_index(candidate, acc) |> do_insert_indices(indices, tail)
