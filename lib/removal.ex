@@ -24,7 +24,7 @@ defmodule Removal do
 
   defp do_insert_indices(_acc, [], candidates), do: candidates
   defp do_insert_indices([], _indices, []), do: :no_match
-  defp do_insert_indices(acc, _indices, []), do: acc |> Enum.flat_map(fn(x) -> Enum.reverse(x) end) |> Enum.reverse
+  defp do_insert_indices(acc, _indices, []), do: acc |> Enum.reverse |> List.flatten
   defp do_insert_indices(acc, indices, [candidate | tail]) do
     indices |> insert_index(candidate) |> add_to(acc) |> do_insert_indices(indices, tail)
   end
