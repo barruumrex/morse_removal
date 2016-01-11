@@ -5,18 +5,18 @@ defmodule Removal do
   def find_removal_combinations(base, removals), do: do_find_removal_combinations([], base, removals)
 
   defp do_find_removal_combinations(:no_match, _base, _removal), do: []
-  defp do_find_removal_combinations(acc, _base, <<>>), do: acc
-  defp do_find_removal_combinations(acc, base, <<removal::binary-size(1), tail::binary>>) do
+  defp do_find_removal_combinations(acc, _base, []), do: acc
+  defp do_find_removal_combinations(acc, base, [removal | tail]) do
     base |> find_indices(removal) |> insert_indices(acc) |> do_find_removal_combinations(base, tail)
   end
 
   defp find_indices(base, removal), do: do_find_indices([], 1, base, removal)
 
-  defp do_find_indices(acc, _index, <<>>, _removal), do: acc
-  defp do_find_indices(acc, index, <<letter::binary-size(1), tail::binary>>, removal) when letter==removal do
+  defp do_find_indices(acc, _index, [], _removal), do: acc
+  defp do_find_indices(acc, index, [letter | tail], removal) when letter==removal do
     index |> add_to(acc) |> do_find_indices(bsl(index,1), tail, removal)
   end
-  defp do_find_indices(acc, index, <<_letter::binary-size(1), tail::binary>>, removal) do
+  defp do_find_indices(acc, index, [_letter | tail], removal) do
     acc |> do_find_indices(bsl(index,1), tail, removal)
   end
 
@@ -43,11 +43,11 @@ defmodule Removal do
 
   def remove_from(removals, string), do: Enum.map(removals, fn(indices) -> do_remove_from([], indices, string) end)
 
-  defp do_remove_from(acc, _indices, <<>>), do: acc |> Enum.reverse |> Enum.join
-  defp do_remove_from(acc, indices, <<_letter::binary-size(1),tail::binary>>) when (indices &&& 1) == 1 do
+  defp do_remove_from(acc, _indices, []), do: acc |> Enum.reverse
+  defp do_remove_from(acc, indices, [_letter | tail]) when (indices &&& 1) == 1 do
     do_remove_from(acc, bsr(indices,1), tail)
   end
-  defp do_remove_from(acc, indices, <<letter::binary-size(1),tail::binary>>) do
+  defp do_remove_from(acc, indices, [letter | tail]) do
     letter |> add_to(acc) |> do_remove_from(bsr(indices,1), tail)
   end
 

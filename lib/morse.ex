@@ -10,9 +10,9 @@ defmodule Morse do
     ?( => "-*--*", ?) => "-*--*-", ?" => ".-..-.", ?= => "-***-", ?+ => "*-*-*", ?* => "-**-", ?@ => "*--*-*"
   }
 
-  
-  def encode(string), do: string |> String.upcase |> String.to_char_list |> Enum.reduce("", &do_encode/2)
-  
+
+  def encode(string), do: string |> String.upcase |> to_char_list |> Enum.reduce("", &do_encode/2) |> to_char_list
+
   defp do_encode(char,"" ) do get_code(char) end
   defp do_encode(char,acc ) do acc <> "_" <> get_code(char) end
 
