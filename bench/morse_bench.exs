@@ -21,12 +21,6 @@ defmodule MorseBench do
     MorseRemoval.unique_count("The Star Wars Saga", "Leia")
   end
 
-  bench "bytecode benchmarck remove 'Leia' from 'The Star Wars'" do
-    star_wars = Morse.encode("The Star Wars Saga")
-    leia = Morse.encode("Leia")
-    star_wars |> Removal.find_removal_combinations(leia) |> Removal.remove_from(star_wars) |> Enum.uniq |> Enum.count
-  end
-
   bench "remove 'Yoda' then 'Leia' from 'The Star Wars Saga'" do
     "The Star Wars Saga" |> MorseRemoval.unique_count(["Yoda","Leia"]) |> IO.puts
   end

@@ -20,22 +20,22 @@ defmodule Removal do
     acc |> do_find_indices(bsl(index,1), tail, removal)
   end
 
-  defp insert_indices(candidates, indices), do: do_insert_indices([], indices, candidates)
+  defp insert_indices(candidates, indices), do: do_insert_indices([], Enum.reverse(indices), candidates)
 
   defp do_insert_indices(_acc, [], candidates), do: candidates
   defp do_insert_indices([], _indices, []), do: :no_match
-  defp do_insert_indices(acc, _indices, []), do: acc
+  defp do_insert_indices(acc, _indices, []), do: acc |> Enum.flat_map(fn(x) -> Enum.reverse(x) end) |> Enum.reverse
   defp do_insert_indices(acc, indices, [candidate | tail]) do
-    indices |> insert_index(candidate, acc) |> do_insert_indices(indices, tail)
+    indices |> insert_index(candidate) |> add_to(acc) |> do_insert_indices(indices, tail)
   end
 
-  defp insert_index(indices, candidate, acc), do: do_insert_index(acc, indices, candidate)
+  defp insert_index(indices, candidate), do: do_insert_index([], indices, candidate)
 
   defp do_insert_index(acc, [], _candidate), do: acc
   defp do_insert_index(acc, [index | tail], candidate) when candidate > index do
     index |> bor(candidate) |> add_to(acc) |> do_insert_index(tail, candidate)
   end
-  defp do_insert_index(acc, [_index | tail], candidate), do: do_insert_index(acc, tail, candidate)
+  defp do_insert_index(acc, _indices, _candidate), do: acc
 
   def remove_from(removals, string), do: Enum.map(removals, fn(indices) -> do_remove_from([], indices, string) end)
 
@@ -47,5 +47,6 @@ defmodule Removal do
     letter |> add_to(acc) |> do_remove_from(bsr(indices,1), tail)
   end
 
+  defp add_to([], collection), do: collection
   defp add_to(element, collection) when is_list(collection), do: [element | collection]
 end
